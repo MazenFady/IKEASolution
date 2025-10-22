@@ -1,0 +1,180 @@
+﻿using Humanizer;
+using IKEA.BLL.Dto_s.DepartmentDto_s;
+using IKEA.BLL.Services;
+using IKEA.PL.ViewModels.DepartmentVms;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+
+namespace IKEA.PL.Controllers
+{
+    #region Services - DI
+    public class DepartmentController : Controller
+    {
+        private readonly IDepartmentServices DepartmentServices;
+        private readonly ILogger<DepartmentController> logger;
+        private readonly IWebHostEnvironment webHost;
+
+        public DepartmentController(IDepartmentServices department, ILogger<DepartmentController> logger, IWebHostEnvironment webHost)
+        {
+            this.DepartmentServices = department;
+            this.logger = logger;
+            this.webHost = webHost;
+        }
+        #endregion
+
+        #region Index
+        public IActionResult Index()
+        {
+            var Depts = DepartmentServices.GetAllDepartments();
+            return View(Depts);
+        }
+        #endregion
+
+        #region Create
+        public IActionResult Create() => View();
+
+        [HttpPost]
+        public IActionResult Create(CreatedDepartmentDto dto)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int Result = DepartmentServices.AddDepartment(dto);
+                    if (Result > 0) return RedirectToAction("Index");
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Department Can't Be Created");
+                        return View(dto);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    if (webHost.IsDevelopment())
+                    {
+                        logger.LogError(ex.Message);
+                        return View(dto);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+
+                }
+            }
+            else
+            {
+                return View(dto);
+            }
+        }
+        #endregion
+    
+
+        #region Details
+
+        [HttpGet]
+        public IActionResult Details([FromRoute] int? id)
+        {
+            if (id == null) return BadRequest();
+            var Department = DepartmentServices.GetDepartmentById(id.Value);
+            if (Department == null) return NotFound();
+
+            return View(Department);
+        }
+        #endregion
+
+        #region Update
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null) return BadRequest();
+            var Department = DepartmentServices.GetDepartmentById(id.Value);
+            if (Department == null) return NotFound();
+            var ViewDepartment = new DepartmentViewModel
+            {
+                Id = id.Value,
+                Name = Department.Name,
+                Description = Department.Description,
+                Code = Department.Code
+            };
+
+            return View(ViewDepartment);
+        }
+        [HttpPost]
+        public IActionResult Edit([FromRoute] int? id, DepartmentViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            var Department = new UpdatedDepartmentDto()
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description,
+                Code = model.Code
+
+            };
+
+
+            try
+            {
+                int Result = DepartmentServices.UpdateDepartment(Department);
+                if (Result > 0) return RedirectToAction("Index");
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Department Can't Be Created");
+                    return View(model);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (webHost.IsDevelopment())
+                {
+                    logger.LogError(ex.Message);
+                    return View(model);
+                }
+                else
+                {
+                    throw;
+                }
+
+            }
+
+        }
+        #endregion
+
+        #region Delete
+        [HttpGet]
+        public IActionResult Delete( int? id)
+        {    
+            if (id is null)
+                return BadRequest();
+         var Department = DepartmentServices.GetDepartmentById(id.Value);
+            if(Department is null)
+                return NotFound();
+            return View(Department);
+        }
+        [HttpPost]
+        public IActionResult Delete(int Deptid)
+        {
+            var Message = string.Empty;
+            try
+            {
+                var IsDeleted = DepartmentServices.DeleteDepartment(Deptid);
+                if (IsDeleted)
+                    return RedirectToAction(nameof(Index));
+                 
+                Message = "Department Can't Be Deleted";
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,ex.Message);
+
+                Message = ex.Message;
+            } ModelState.AddModelError(string.Empty, Message);
+            return RedirectToAction(nameof(Delete), new {id=Deptid});
+        }
+        #endregion
+
+    }
+}

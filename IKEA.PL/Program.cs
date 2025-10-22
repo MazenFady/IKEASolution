@@ -1,3 +1,4 @@
+using IKEA.BLL.Services;
 using IKEA.DAL.Context;
 using IKEA.DAL.Reporsatories.DepartmentRepo;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,10 @@ namespace IKEA.PL
 
             });
 
-            builder.Services.AddScoped<IDepartmentReposatry, DepartmentReposatry>();
-            var app = builder.Build();
 
-          
+            builder.Services.AddScoped<IDepartmentReposatry, DepartmentReposatry>();
+            builder.Services.AddScoped<IDepartmentServices, DepartmentServices>();
+            var app = builder.Build();
 
       
             app.UseRouting();

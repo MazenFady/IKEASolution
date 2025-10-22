@@ -14,7 +14,7 @@ namespace IKEA.DAL.Reporsatories.DepartmentRepo
         public int Add(Department department);
 
         public int Update(Department department);
-        public int Delete(int id);
+        public int Delete(Department department);
 
 
     }
