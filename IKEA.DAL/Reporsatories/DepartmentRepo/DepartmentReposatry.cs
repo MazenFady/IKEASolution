@@ -19,12 +19,13 @@ namespace IKEA.DAL.Reporsatories.DepartmentRepo
             _context = context;
 
         }
+
         public IEnumerable<Department> GetAll(bool WithTracking=false)
         {
             if (WithTracking)
-                return _context.Departments.ToList();
-            else
-                return _context.Departments.AsNoTracking().ToList();    
+                return _context.Departments.Where(D=>D.IsDeleted==false).AsNoTracking();
+            
+                return _context.Departments.Where(D=>D.IsDeleted==false).ToList();    
         }
 
         public Department GetById(int id)
@@ -44,10 +45,12 @@ namespace IKEA.DAL.Reporsatories.DepartmentRepo
             return _context.SaveChanges();
         }
 
-        public int Delete(int id)
+        public int Delete(Department department)
         {
-           var department = _context.Departments.Find(id);
-            _context.Departments.Remove(department);
+            
+           
+            department.IsDeleted = true;
+            _context.Departments.Update (department);
             return _context.SaveChanges();
         }
 
