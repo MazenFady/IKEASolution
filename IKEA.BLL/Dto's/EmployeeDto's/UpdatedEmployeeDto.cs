@@ -11,7 +11,7 @@ namespace IKEA.BLL.Dto_s.EmployeeDto_s
     public class UpdatedEmployeeDto
     {
         public int Id { get; set; }
-        [Required(ErrorMessage ="Name is Required")]
+        [Required]
         [MaxLength(50, ErrorMessage = "Max length should be 50 character")]
         [MinLength(5, ErrorMessage = "Min length should be 5 characters")]
         public string Name { get; set; } = null!;

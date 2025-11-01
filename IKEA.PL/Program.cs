@@ -7,6 +7,7 @@ using IKEA.DAL.Context;
 using IKEA.DAL.Reporsatories.DepartmentRepo;
 using IKEA.DAL.Reporsatories.EmployeeRepo;
 using Microsoft.Build.Evaluation;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace IKEA.PL
@@ -30,8 +31,10 @@ namespace IKEA.PL
 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
-            builder.Services.AddAutoMapper(m=>m.AddProfile(new ProjectMapperProfile()));
 
+            //builder.Services.AddAutoMapper((x) => { } , assemblies : typeof(ProjectReference).Assembly);
+            builder.Services.AddAutoMapper(m=>m.AddProfile(new ProjectMapperProfile()));
+            
             var app = builder.Build();
 
       

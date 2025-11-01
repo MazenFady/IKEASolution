@@ -17,8 +17,7 @@
                 <a class="nav-link" id="administration-tab" data-bs-toggle="tab" href="#administration" role="tab" aria-controls="administration" aria-selected="false">Administration</a>
             </li>
         </ul>
-        <form asp-action="Delete" asp-route-Deptid="@Model.Id" method="post">
-            <div asp-validation-summary="ModelOnly" class=" text-bg-danger"></div>
+        <form asp-action="Delete" method="post">
             <div class="tab-content" id="myTabContent">
                 <!-- General Tab Content -->
                 <div class="tab-pane fade show active p-4 border" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -58,7 +57,6 @@
                         <input asp-for="LastModifiedOn" class="form-control" readonly />
                     </div>
                 </div>
-                
                 <div class="mt-4">
                     <input type="submit" class="btn btn-danger" value="Delete Department" />
                     <a asp-action="Index" class="btn btn-outline-dark">Back To list</a>
@@ -69,3 +67,4 @@
 
     </div>
 </div>
+

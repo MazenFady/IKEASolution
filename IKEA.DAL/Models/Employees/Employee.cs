@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.DAL.Models.Employees
 {
-    public class Employee : BaseEntity
+    public class    Employee : BaseEntity
     {
         public string Name { get; set; } = null!;
          public int Age { get; set; }
@@ -19,5 +19,6 @@ namespace IKEA.DAL.Models.Employees
         public DateTime HiringDate { get; set; }
         public Gender Gender { get; set; }
         public EmployeeType EmployeeType { get; set; }
+        
     }
 }

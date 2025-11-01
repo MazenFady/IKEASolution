@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace IKEA.BLL.Services.DepartmentService
 {
-    public class DepartmentServices : IDepartmentServices
+    public class DepartmentServices :   IDepartmentServices
     {
         private readonly IDepartmentRepository _repository;
-        public DepartmentServices(IDepartmentRepository reposatry) 
+        public DepartmentServices(IDepartmentRepository reposatry)
         {
             _repository = reposatry;
 
@@ -59,10 +59,16 @@ namespace IKEA.BLL.Services.DepartmentService
         }
         public bool DeleteDepartment(int id)
         {
+            var department = _repository.GetById(id);
+            if (department is null) return false;
+            else
+            {
+                var result = _repository.Delete(department);
+                if (result > 0) return true;
+                 else return false;
+          
+            }
 
-            return _repository.Delete(_repository.GetById(id)) > 0;
         }
-
-       
     }
 }
