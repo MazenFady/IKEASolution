@@ -22,39 +22,58 @@ namespace IKEA.BLL.Services.EmployeeServices
             this.mapper = mapper;
         }
 
-        public IEnumerable<EmployeeDto> GetAllEmployees()
+        public IEnumerable<EmployeeDto> GetAllEmployees(bool withTracking = false)
             =>
              mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(_employeeRepository.GetAll());
+
+
+        public EmployeeDetailsDto? GetEmployeeById(int Id)
+        { 
+        var employee = _employeeRepository.GetById(Id);
+            return employee is null ? null : mapper.Map<EmployeeDetailsDto>(employee);
             
-        
-        public EmployeeDetailsDto GetEmployeeById(int Id)
-        =>mapper.Map<Employee,EmployeeDetailsDto>(_employeeRepository.GetById(Id));
-        
-        public int CreateEmployee(CreatedEmployeeDto dto)
+        }
+        public int AddEmployee(CreatedEmployeeDto dto)
         {
-            var Emp =mapper.Map<CreatedEmployeeDto, Employee>(dto);
-            Emp.CreatedBy = 1;
-                Emp.CreatedOn=DateTime.Now;
-            Emp.LastModifiedBy= 1;
-                Emp.LastModifiedOn= DateTime.Now;
-           return _employeeRepository.Add(Emp);
+            //var Emp = mapper.Map<CreatedEmployeeDto, Employee>(dto);
+            //Emp.CreatedBy = 1;
+            //Emp.CreatedOn = DateTime.Now;
+            //Emp.LastModifiedBy = 1;
+            //Emp.LastModifiedOn = DateTime.Now;
+            //return _employeeRepository.Add(Emp);
+            var employee = mapper.Map<Employee>(dto);
+            return _employeeRepository.Add(employee);
+
         }
         public int UpdateEmployee(UpdatedEmployeeDto dto)
         {
-            var Emp = mapper.Map<UpdatedEmployeeDto, Employee>(dto);
-            Emp.LastModifiedBy = 1;
-            Emp.LastModifiedOn = DateTime.Now;
-           return _employeeRepository.Update(Emp);
+            //var Emp = mapper.Map<UpdatedEmployeeDto, Employee>(dto);
+            //Emp.LastModifiedBy = 1;
+            //Emp.LastModifiedOn = DateTime.Now;
+            //return _employeeRepository.Update(Emp);
+            var employee = mapper.Map<Employee>(dto);
+            return _employeeRepository.Update(employee);
         }
 
-        public int DeleteEmployee(int? id)
+        public bool DeleteEmployee(int id)
         {
-            if (id is not null)
-                return _employeeRepository.Delete(id.Value);
-            else
-                return 0;
+            //var employee = _employeeRepository.GetById(id.Value);
+            //if (employee is null) return false;
+            //else
+            //{
+            //    employee.IsDeleted = true;
+            //    _employeeRepository.Update(employee);
+
+            //    return _employeeRepository.SaveChanges() > 0 ? true : false;
+            //}
+            var employee = _employeeRepository.GetById(id);
+            if (employee is null) return false;
+            else 
+            {
+                employee.IsDeleted = true;
+                return _employeeRepository.Update(employee)> 0 ?  true : false ;
+            }
         }
-       
-       
+
     }
 }

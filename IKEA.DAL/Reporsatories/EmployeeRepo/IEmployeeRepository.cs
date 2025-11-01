@@ -10,6 +10,6 @@ namespace IKEA.DAL.Reporsatories.EmployeeRepo
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        
+     
     }
 }

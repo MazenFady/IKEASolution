@@ -13,16 +13,23 @@ namespace IKEA.BLL.Mapping.MappingProfile
     {
         public ProjectMapperProfile()
         {
-            CreateMap<Employee, EmployeeDto>().ReverseMap();
+            CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.EmployeeType, options => options.MapFrom(src => src.EmployeeType))
+            .ForMember(dest => dest.Gender, options => options.MapFrom(src => src.Gender)).ReverseMap();
 
-            CreateMap<Employee, EmployeeDetailsDto>().ReverseMap();
+            CreateMap<Employee, EmployeeDetailsDto>()
+                .ForMember(dest => dest.Gender , option => option.MapFrom(src => src.Gender))
+                .ForMember(dest => dest.EmployeeType, option => option.MapFrom(src => src.EmployeeType))
+                .ForMember(dest => dest.HiringDate, option => option.MapFrom(src => DateOnly.FromDateTime(src.HiringDate))).ReverseMap();
 
             CreateMap<CreatedEmployeeDto, Employee>()
-                .ForMember(dest=> dest.EmployeeType , options=> options.MapFrom(src=> src.EmpType))
-            .ForMember(dest => dest.Gender, options => options.MapFrom(src => src.EmpGender));
-            CreateMap<UpdatedEmployeeDto, Employee>().ReverseMap();
+                .ForMember(dest => dest.HiringDate, option => option.MapFrom(src => src.HiringDate.ToDateTime(new TimeOnly()))).ReverseMap();
+
+            CreateMap<UpdatedEmployeeDto, Employee>()
+                .ForMember(dest => dest.HiringDate, option => option.MapFrom(src => src.HiringDate.ToDateTime(new TimeOnly()))).ReverseMap();
+            
 
 
         }
     }
 }
+ 

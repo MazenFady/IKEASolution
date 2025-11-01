@@ -3,7 +3,6 @@ using IKEA.BLL.Dto_s.DepartmentDto_s;
 using IKEA.BLL.Services.DepartmentServices.DepartmentService;
 using IKEA.PL.ViewModels.DepartmentVms;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace IKEA.PL.Controllers
 {
@@ -144,36 +143,45 @@ namespace IKEA.PL.Controllers
         #endregion
 
         #region Delete
-        [HttpGet]
-        public IActionResult Delete( int? id)
-        {    
-            if (id is null)
-                return BadRequest();
-         var Department = DepartmentServices.GetDepartmentById(id.Value);
-            if(Department is null)
-                return NotFound();
-            return View(Department);
-        }
-        [HttpPost]
-        public IActionResult Delete(int Deptid)
-        {
-            var Message = string.Empty;
-            try
-            {
-                var IsDeleted = DepartmentServices.DeleteDepartment(Deptid);
-                if (IsDeleted)
-                    return RedirectToAction(nameof(Index));
-                 
-                Message = "Department Can't Be Deleted";
+            [HttpGet]
+            public IActionResult Delete( int? id)
+            {    
+                if (!id.HasValue)
+                    return BadRequest();
+             var Department = DepartmentServices.GetDepartmentById(id.Value);
+                if(Department is null)
+                    return NotFound();
+                return View(Department);
             }
-            catch (Exception ex)
+            [HttpPost]
+            [ValidateAntiForgeryToken]    
+            public IActionResult DeleteConfirmed(int id)
             {
-                logger.LogError(ex,ex.Message);
+                
+              if (id == 0) return BadRequest();
+                try
+                {
 
-                Message = ex.Message;
-            } ModelState.AddModelError(string.Empty, Message);
-            return RedirectToAction(nameof(Delete), new {id=Deptid});
-        }
+                    bool IsDeleted = DepartmentServices.DeleteDepartment(id);
+                    if(IsDeleted)
+                    return RedirectToAction(nameof(Index));
+                else ModelState.AddModelError(string.Empty, "Department Can't Be Deleted");
+                    return RedirectToAction(nameof(Delete), new {  id });
+                }
+                catch (Exception ex)
+                {
+                if (environment.IsDevelopment())
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return View(ex); 
+                }
+
+                }
+            }
         #endregion
 
     }

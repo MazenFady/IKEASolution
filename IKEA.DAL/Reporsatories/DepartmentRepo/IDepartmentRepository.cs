@@ -9,6 +9,6 @@ namespace IKEA.DAL.Reporsatories.DepartmentRepo
 {
     public interface IDepartmentRepository : IGenericRepository<Department>
     {
-           
+        
     }
 }

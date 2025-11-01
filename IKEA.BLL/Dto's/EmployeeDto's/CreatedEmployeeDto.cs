@@ -10,7 +10,7 @@ namespace IKEA.BLL.Dto_s.EmployeeDto_s
 {
     public class CreatedEmployeeDto
     {
-        [Required(ErrorMessage ="Name is Required")]
+        [Required]
         [MaxLength(50, ErrorMessage = "Max length should be 50 character")]
         [MinLength(5, ErrorMessage = "Min length should be 5 characters")]
         public string Name { get; set; } = null!;
@@ -30,7 +30,7 @@ namespace IKEA.BLL.Dto_s.EmployeeDto_s
         public string? PhoneNumber { get; set; }
         [Display(Name = "Hiring Date")]
         public DateOnly HiringDate { get; set; }
-        public Gender EmpGender { get; set; }
-        public EmployeeType EmpType { get; set; }
+        public Gender Gender { get; set; }
+        public EmployeeType EmployeeType { get; set; }
     }
 }
