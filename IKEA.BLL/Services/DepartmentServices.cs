@@ -1,7 +1,5 @@
 ﻿using IKEA.BLL.Dto_s.DepartmentDto_s;
-using IKEA.BLL.Dto_s.EmployeeDto_s;
-using IKEA.BLL.Factories.DepartmentFactory;
-using IKEA.BLL.Services.DepartmentServices.DepartmentService;
+using IKEA.BLL.Factories;
 using IKEA.DAL.Reporsatories.DepartmentRepo;
 using System;
 using System.Collections.Generic;
@@ -9,32 +7,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IKEA.BLL.Services.DepartmentService
+namespace IKEA.BLL.Services
 {
     public class DepartmentServices : IDepartmentServices
     {
-        private readonly IDepartmentRepository _repository;
-        public DepartmentServices(IDepartmentRepository reposatry) 
+        private readonly IDepartmentReposatry _repository;
+        public DepartmentServices(IDepartmentReposatry reposatry) 
         {
             _repository = reposatry;
 
         }
-
-        public IEnumerable<DepartmentDto> GetAllDepartments()
+        public IEnumerable<DepartmentDto> GetAllDepartments() 
         {
             var Departments = _repository.GetAll();
-
-            List<DepartmentDto> MappedDepartments = new List<DepartmentDto>();
+            
+                List<DepartmentDto>  MappedDepartments = new List<DepartmentDto>();
             foreach (var Dept in Departments)
-            {
+            { 
                 var MappedDepart = Dept.ToDepartmentDto();
                 MappedDepartments.Add(MappedDepart);
             }
-            return MappedDepartments;
+            return MappedDepartments;   
 
         }
 
-        public DepartmentDetailsDto GetDepartmentById(int id)
+        public DepartmentDetailsDto GetDepartmentById(int id) 
         {
             var Department = _repository.GetById(id);
 
@@ -46,23 +43,22 @@ namespace IKEA.BLL.Services.DepartmentService
             }
         }
 
-        public int AddDepartment(CreatedDepartmentDto dto)
+        public int AddDepartment(CreatedDepartmentDto dto) 
         {
             var Dept = dto.ToDepartment();
-            return _repository.Add(Dept);
-
+           return _repository.Add(Dept);
+        
         }
-        public int UpdateDepartment(UpdatedDepartmentDto dto)
+        public int UpdateDepartment(UpdatedDepartmentDto dto) 
         {
             var Dept = dto.fromUpdatedDepartment();
             return _repository.Update(Dept);
         }
         public bool DeleteDepartment(int id)
         {
-
+          
             return _repository.Delete(_repository.GetById(id)) > 0;
         }
 
-       
     }
 }

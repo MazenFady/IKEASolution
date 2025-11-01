@@ -1,6 +1,6 @@
 ﻿using Humanizer;
 using IKEA.BLL.Dto_s.DepartmentDto_s;
-using IKEA.BLL.Services.DepartmentServices.DepartmentService;
+using IKEA.BLL.Services;
 using IKEA.PL.ViewModels.DepartmentVms;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
@@ -12,13 +12,13 @@ namespace IKEA.PL.Controllers
     {
         private readonly IDepartmentServices DepartmentServices;
         private readonly ILogger<DepartmentController> logger;
-        private readonly IWebHostEnvironment environment;
+        private readonly IWebHostEnvironment webHost;
 
-        public DepartmentController(IDepartmentServices department, ILogger<DepartmentController> logger, IWebHostEnvironment environment)
+        public DepartmentController(IDepartmentServices department, ILogger<DepartmentController> logger, IWebHostEnvironment webHost)
         {
             this.DepartmentServices = department;
             this.logger = logger;
-            this.environment = environment;
+            this.webHost = webHost;
         }
         #endregion
 
@@ -51,7 +51,7 @@ namespace IKEA.PL.Controllers
                 }
                 catch (Exception ex)
                 {
-                    if (environment.IsDevelopment())
+                    if (webHost.IsDevelopment())
                     {
                         logger.LogError(ex.Message);
                         return View(dto);
@@ -128,7 +128,7 @@ namespace IKEA.PL.Controllers
             }
             catch (Exception ex)
             {
-                if (environment.IsDevelopment())
+                if (webHost.IsDevelopment())
                 {
                     logger.LogError(ex.Message);
                     return View(model);

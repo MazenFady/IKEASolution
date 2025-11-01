@@ -1,5 +1,4 @@
 ﻿using IKEA.DAL.Models;
-using IKEA.DAL.Models.Employees;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +21,11 @@ namespace IKEA.DAL.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDBContext).Assembly);
         }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<Employee> Employees { get; set; }
     }
-    
+    //public class Department : BaseEntity
+    //{
+    //    public string Name { get; set; }
+    //    public string? Description { get; set; }
+    //    public string? Code { get; set; }
+    //}
 }

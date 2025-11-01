@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IKEA.DAL.Models.Shared
+namespace IKEA.DAL.Models
 {
     public class BaseEntity
     {
