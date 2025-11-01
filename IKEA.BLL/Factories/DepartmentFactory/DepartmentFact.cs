@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IKEA.BLL.Factories
+namespace IKEA.BLL.Factories.DepartmentFactory
 {
     public static class DepartmentFact
     {
