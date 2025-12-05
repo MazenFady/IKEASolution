@@ -33,10 +33,18 @@ namespace IKEA.PL.Controllers
         public IActionResult Create() => View();
 
         [HttpPost]
-        public IActionResult Create(CreatedDepartmentDto dto)
+        //[ValidateAntiForgeryToken]
+        public IActionResult Create(DepartmentViewModel VM)
         {
             if (ModelState.IsValid)
             {
+               CreatedDepartmentDto dto = new CreatedDepartmentDto()
+                {
+                    Name = VM.Name,
+                    Description = VM.Description,
+                    Code = VM.Code
+
+                };
                 try
                 {
                     int Result = DepartmentServices.AddDepartment(dto);
@@ -44,7 +52,7 @@ namespace IKEA.PL.Controllers
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Department Can't Be Created");
-                        return View(dto);
+                        return View(VM);
                     }
 
                 }
@@ -53,7 +61,7 @@ namespace IKEA.PL.Controllers
                     if (environment.IsDevelopment())
                     {
                         logger.LogError(ex.Message);
-                        return View(dto);
+                        return View(VM);
                     }
                     else
                     {
@@ -64,7 +72,7 @@ namespace IKEA.PL.Controllers
             }
             else
             {
-                return View(dto);
+                return View(VM );
             }
         }
         #endregion
@@ -154,6 +162,7 @@ namespace IKEA.PL.Controllers
                 return View(Department);
             }
             [HttpPost]
+            [ActionName("Delete")]
             [ValidateAntiForgeryToken]    
             public IActionResult DeleteConfirmed(int id)
             {

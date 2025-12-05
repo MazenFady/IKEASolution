@@ -17,12 +17,12 @@ namespace IKEA.DAL.Reporsatories.GenericRepo
         {
             this._context = context;
         }
-        public IEnumerable<TEntity> GetAll(bool WithTracking = false)
+        public IQueryable<TEntity> GetAll(bool WithTracking = false)
         {
             if (WithTracking)
-                return _context.Set<TEntity>().ToList();
+                return _context.Set<TEntity>().Where(e=>e.IsDeleted !=true);
             else
-                return _context.Set<TEntity>().AsNoTracking().ToList();
+                return _context.Set<TEntity>().AsNoTracking().Where(E=>E.IsDeleted !=true);
         }
         public TEntity GetById(int id)
         {
@@ -47,5 +47,14 @@ namespace IKEA.DAL.Reporsatories.GenericRepo
             return _context.SaveChanges();
         }
 
+        public IEnumerable<TEntity> GetEnumarble()
+        {
+            return _context.Set<TEntity>();
+        }
+
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return _context.Set<TEntity>();
+        }
     }
 }
