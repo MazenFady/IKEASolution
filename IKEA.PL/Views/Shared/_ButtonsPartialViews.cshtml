@@ -1,0 +1,46 @@
+﻿@model int 
+<td><a asp-action="Details" asp-route-id="@Model" class="btn btn-primary"><i class="fas fa-eye"></i> Details</a> </td>
+<td><a asp-action="Edit" asp-route-id="@Model" class="btn btn-warning"><i class="fas fa-edit"></i> Update</a> </td>
+@* <td><a asp-action="Delete" asp-route-id="@dept.Id" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</a> </td> *@
+<td>
+    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@Model">
+        <i class="fas fa-trash"></i> Delete
+
+    </a>
+</td>
+@* <td>
+    <a class="btn btn-primary" asp-action="Details" asp-route-id="@employee.Id">
+        <i class="fas fa-eye"></i> Details
+    </a>
+</td>
+<td>
+    <a class="btn btn-success" asp-action="Edit" asp-route-id="@employee.Id">
+        <i class="fas fa-edit"></i> Edit
+    </a>
+</td>
+<td>
+    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-@employee.Id">
+        <i class="fas fa-trash"></i> Delete
+    </button>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal-@employee.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Employee</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are You Sure to Delete this Employee?
+                </div>
+                <div class="modal-footer">
+                    <form method="post" asp-action="Delete" asp-controller="Employees" asp-route-id="@employee.Id" class="mt-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</td> *@

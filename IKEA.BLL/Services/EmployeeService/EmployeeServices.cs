@@ -23,6 +23,20 @@ namespace IKEA.BLL.Services.EmployeeServices
         }
 
         public IEnumerable<EmployeeDto> GetAllEmployees(bool withTracking = false)
+            //{
+            //    var result = _employeeRepository.GetQueryable().Where(e => e.IsDeleted != true).
+            //        Select(e => new EmployeeDto()
+            //        {
+            //            Id = e.Id,
+            //            Name = e.Name,
+            //            Age = e.Age
+
+
+            //        });
+
+            //    return result.ToList();
+
+            //}
             =>
              mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(_employeeRepository.GetAll());
 

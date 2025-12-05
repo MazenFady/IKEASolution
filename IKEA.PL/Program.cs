@@ -6,6 +6,7 @@ using IKEA.BLL.Services.EmployeeServices;
 using IKEA.DAL.Context;
 using IKEA.DAL.Reporsatories.DepartmentRepo;
 using IKEA.DAL.Reporsatories.EmployeeRepo;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,15 @@ namespace IKEA.PL
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options => 
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            
+            });
+
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
 

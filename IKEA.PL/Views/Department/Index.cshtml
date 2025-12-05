@@ -22,21 +22,14 @@
                     </tr>
                 </thead>
                 <tbody class="tab-content">
-                    @foreach (var dept in Model)
+                    @foreach (var Item in Model)
                     {
                         <tr>
-                            <td>@dept.Code </td>
-                            <td>@dept.Name </td>
-                            <td>@dept.Description </td>
-                            <td><a asp-action="Details" asp-route-id="@dept.Id" class="btn btn-primary"><i class="fas fa-eye"></i> Details</a> </td>
-                            <td><a asp-action="Edit" asp-route-id="@dept.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Update</a> </td>
-                            @* <td><a asp-action="Delete" asp-route-id="@dept.Id" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</a> </td> *@
-                            <td>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteDepartment">
-                                    <i class="fas fa-trash"></i> Delete 
-                                        
-                                </button>
-                                </td>
+                            <td>@Item.Code </td>
+                            <td>@Item.Name </td>
+                            <td>@Item.Description </td>
+                            <partial name="_ButtonsPartialViews" model="@Item.Id" />
+
                         </tr>
                         <!-- Modal -->
                         <div class="modal fade" id="DeleteDepartment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -47,11 +40,11 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <h4 class="modal-title fs-5" id="exampleModalLabel">Are you Sure To Delete @dept.Name Department!!</h4>
+                                        <h4 class="modal-title fs-5" id="exampleModalLabel">Are you Sure To Delete @Item.Name Department!!</h4>
 
                                     </div>
                                     <div class="modal-footer">
-                                        <form asp-action="Delete" asp-route-Deptid="@dept.Id" method="post">
+                                        <form asp-action="Delete" asp-route-Deptid="@Item.Id" method="post">
                                          <div asp-validation-summary="ModelOnly" class=" text-bg-danger"></div>
                                      <div class="mt-4">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
