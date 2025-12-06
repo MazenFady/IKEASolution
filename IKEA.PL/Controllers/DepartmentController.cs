@@ -22,14 +22,16 @@ namespace IKEA.PL.Controllers
         #endregion
 
         #region Index
+        
         public IActionResult Index()
         {
+            ViewData["Messge"] = "Hello From View Data";
             var Depts = DepartmentServices.GetAllDepartments();
             return View(Depts);
         }
         #endregion
 
-        #region Create
+        #region Create 
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -48,7 +50,11 @@ namespace IKEA.PL.Controllers
                 try
                 {
                     int Result = DepartmentServices.AddDepartment(dto);
-                    if (Result > 0) return RedirectToAction("Index");
+                    if (Result > 0) 
+                    {
+                        TempData["Message"] = $"Department {VM.Code} Created Successfully";
+                        return RedirectToAction("Index");
+                    } 
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Department Can't Be Created");
@@ -72,6 +78,7 @@ namespace IKEA.PL.Controllers
             }
             else
             {
+                TempData["Message"] = "Please correct the errors and try again.";
                 return View(VM );
             }
         }

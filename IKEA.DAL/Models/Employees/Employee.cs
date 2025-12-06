@@ -1,4 +1,5 @@
 ﻿using IKEA.DAL.Models.Shared;
+using IKEA.DAL.Models.Departments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.DAL.Models.Employees
 {
-    public class    Employee : BaseEntity
+    public class Employee : BaseEntity
     {
         public string Name { get; set; } = null!;
          public int Age { get; set; }
@@ -19,6 +20,8 @@ namespace IKEA.DAL.Models.Employees
         public DateTime HiringDate { get; set; }
         public Gender Gender { get; set; }
         public EmployeeType EmployeeType { get; set; }
-        
+        public int? DepartmentId { get; set; }
+       public virtual Department? Department { get; set; }
+
     }
 }

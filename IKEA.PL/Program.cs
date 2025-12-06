@@ -29,6 +29,7 @@ namespace IKEA.PL
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+              options.UseLazyLoadingProxies();
             });
 
 

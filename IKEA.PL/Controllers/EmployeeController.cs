@@ -1,6 +1,7 @@
 ﻿using IKEA.BLL.Dto_s.DepartmentDto_s;
 using IKEA.BLL.Dto_s.EmployeeDto_s;
 using IKEA.BLL.Services.DepartmentService;
+using IKEA.BLL.Services.DepartmentServices.DepartmentService;
 using IKEA.BLL.Services.EmployeeServices;
 using IKEA.DAL.Models.Employees;
 using IKEA.DAL.Models.Shared;
@@ -13,12 +14,14 @@ namespace IKEA.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeServices employeeServices;
+        
         private readonly ILogger<EmployeeController> logger;
         private readonly IWebHostEnvironment environment;
 
-        public EmployeeController(IEmployeeServices employeeServices, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
+        public EmployeeController(IEmployeeServices employeeServices ,ILogger<EmployeeController> logger, IWebHostEnvironment environment)
         {
             this.employeeServices = employeeServices;
+           // this.departmentServices = departmentServices;
             this.logger = logger;
             this.environment = environment;
         }
@@ -29,8 +32,11 @@ namespace IKEA.PL.Controllers
 
         }
         [HttpGet]
-        public IActionResult Create() => View();
-        
+        public IActionResult Create()
+        {
+           // ViewData["Departments"]= departmentServices.GetAllDepartments();
+           return  View();
+        }
         [HttpPost]
         public IActionResult Create(EmployeeViewModel Vm)
         {
@@ -46,7 +52,7 @@ namespace IKEA.PL.Controllers
                     Email = Vm.Email,
                     PhoneNumber = Vm.PhoneNumber,
                     HiringDate = Vm.HiringDate,
-
+                    DepartmentId= Vm.DepartmentId,
                 };
 
                 try
@@ -76,6 +82,7 @@ namespace IKEA.PL.Controllers
             }
             else
             {
+                //ViewData["Departments"] = departmentServices.GetAllDepartments();
                 return View(Vm);
             }
         }
@@ -99,6 +106,8 @@ namespace IKEA.PL.Controllers
                 IsActive = Employee.IsActive,
                 HiringDate = Employee.HiringDate,
                 EmployeeType = (EmployeeType)Enum.Parse(typeof(EmployeeType), Employee.EmployeeType),
+                DepartmentId= Employee.DepartmentId,
+                
 
             };
             return View(Employee );
@@ -123,6 +132,7 @@ namespace IKEA.PL.Controllers
                 IsActive = Employee.IsActive,
                 HiringDate = Employee.HiringDate,
                 EmployeeType = (EmployeeType)Enum.Parse(typeof(EmployeeType), Employee.EmployeeType),
+               DepartmentId= Employee.DepartmentId
 
 
             };
@@ -146,7 +156,8 @@ namespace IKEA.PL.Controllers
                 PhoneNumber = model.PhoneNumber,
                 HiringDate = model.HiringDate,
                 EmployeeType = model.EmployeeType,
-                Gender = model.Gender
+                Gender = model.Gender,
+                DepartmentId= model.DepartmentId
             };
 
             try
