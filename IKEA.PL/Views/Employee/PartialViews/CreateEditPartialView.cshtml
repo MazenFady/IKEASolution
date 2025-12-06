@@ -1,5 +1,11 @@
-﻿@using IKEA.PL.ViewModels.EmployeeVms
+﻿@using IKEA.BLL.Services.DepartmentService
+@using IKEA.BLL.Services.DepartmentServices.DepartmentService
+@using IKEA.PL.ViewModels.EmployeeVms
 @model EmployeeViewModel
+@inject IDepartmentServices  DepartmentServices
+@{
+    var Departments = new SelectList(DepartmentServices.GetAllDepartments(), nameof(DepartmentDto.Id), nameof(DepartmentDto.Name));
+}
 
 <div class="form-group mb-3 col-6">
     <label asp-for="Name" class="form-label"></label>
@@ -36,6 +42,17 @@
     <input type="date" asp-for="HiringDate" class="form-control" />
     <span asp-validation-for="HiringDate" class="text-danger"></span>
 </div>
+
+
+
+<div class="form-group mb-3 col-6">
+    <label asp-for="DepartmentId" class="form-label"></label>
+    <select asp-for="DepartmentId" class="form-control" asp-items="@Departments">
+        <option value="@null">Choose Department...</option>
+    </select>
+    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+</div>
+
 
 <div class="form-group mb-3 col-6">
     <label asp-for="Salary" class="form-label"></label>

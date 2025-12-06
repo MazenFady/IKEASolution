@@ -3,6 +3,7 @@ using IKEA.BLL.Dto_s.DepartmentDto_s;
 using IKEA.BLL.Dto_s.EmployeeDto_s;
 using IKEA.DAL.Models.Employees;
 using IKEA.DAL.Reporsatories.EmployeeRepo;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,32 +14,42 @@ namespace IKEA.BLL.Services.EmployeeServices
 {
     public class EmployeeServices : IEmployeeServices
     {
-        public  readonly IEmployeeRepository _employeeRepository;
+        public readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper mapper;
 
-        public EmployeeServices(IEmployeeRepository employeeRepository , IMapper mapper)
+        public EmployeeServices(IEmployeeRepository employeeRepository, IMapper mapper)
         {
-           this._employeeRepository = employeeRepository;
+            this._employeeRepository = employeeRepository;
             this.mapper = mapper;
         }
 
         public IEnumerable<EmployeeDto> GetAllEmployees(bool withTracking = false)
-            //{
-            //    var result = _employeeRepository.GetQueryable().Where(e => e.IsDeleted != true).
-            //        Select(e => new EmployeeDto()
-            //        {
-            //            Id = e.Id,
-            //            Name = e.Name,
-            //            Age = e.Age
 
 
-            //        });
+        {
+            var employees = _employeeRepository.GetAll()
+        .Include(e => e.Department)  // ← هذا السحري!
+        .Where(e => e.IsDeleted != true)
+        .ToList();
 
-            //    return result.ToList();
+            return mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        }
+        //{
+        //    var result = _employeeRepository.GetQueryable().Where(e => e.IsDeleted != true).
+        //        Select(e => new EmployeeDto()
+        //        {
+        //            Id = e.Id,
+        //            Name = e.Name,
+        //            Age = e.Age
 
-            //}
-            =>
-             mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(_employeeRepository.GetAll());
+
+        //        });
+
+        //    return result.ToList();
+
+        //} 
+       // =>
+         //    mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(_employeeRepository.GetAll());
 
 
         public EmployeeDetailsDto? GetEmployeeById(int Id)

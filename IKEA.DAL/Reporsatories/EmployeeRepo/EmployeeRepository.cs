@@ -1,5 +1,5 @@
 ﻿using IKEA.DAL.Context;
-using IKEA.DAL.Models.Department;
+using IKEA.DAL.Models.Departments;
 using IKEA.DAL.Models.Employees;
 using IKEA.DAL.Reporsatories.GenericRepo;
 using System;

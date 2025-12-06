@@ -1,8 +1,12 @@
 ﻿
+@using IKEA.BLL.Services.DepartmentService
+@using IKEA.BLL.Services.DepartmentServices.DepartmentService
 @using IKEA.PL.ViewModels.EmployeeVms
 @model EmployeeViewModel
+
 @{
     ViewData["Title"] = "Create";
+
 }
 
 <div class="card border border-primary">
@@ -13,14 +17,14 @@
 
         <form asp-action="Create" method="post">
 
-            
-
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <partial name="PartialViews/CreateEditPartialView" model="@Model" />
+
             <div class="mt-4 text-center">
                 <button type="submit" class="btn btn-primary">Create Employee</button>
                 <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
             </div>
+          
         </form>
     </div>
 </div>

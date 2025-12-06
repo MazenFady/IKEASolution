@@ -6,7 +6,15 @@
     <div class="card-header ">
         <h1 class="my-3">All Departments</h1>
     </div>
-    <div class="card-body">
+ 
+
+   <div class="card-body">
+       @if(@TempData["Message"] !=null)
+       {
+        <div class="alert alert-success">
+            <h2>@TempData["Message"]</h2>
+        </div>
+       } 
         <a asp-action="Create" class="btn btn-success" >Create Department</a>
         @if (Model.Any())
         {
