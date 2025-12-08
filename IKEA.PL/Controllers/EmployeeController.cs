@@ -25,10 +25,12 @@ namespace IKEA.PL.Controllers
             this.logger = logger;
             this.environment = environment;
         }
-        public IActionResult Index()
-        {
-            var Employees = employeeServices.GetAllEmployees();
-            return View(Employees);
+        public IActionResult Index(string? searchValue)
+        {   if(searchValue==null)
+          return View(employeeServices.GetAllEmployees());
+          else
+                return View( employeeServices.GetSearchedEmployees(searchValue));
+
 
         }
         [HttpGet]
@@ -40,6 +42,7 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         public IActionResult Create(EmployeeViewModel Vm)
         {
+          
             if (ModelState.IsValid)
             {
                 CreatedEmployeeDto dto = new CreatedEmployeeDto()
@@ -53,6 +56,8 @@ namespace IKEA.PL.Controllers
                     PhoneNumber = Vm.PhoneNumber,
                     HiringDate = Vm.HiringDate,
                     DepartmentId= Vm.DepartmentId,
+                    Image = Vm.Image,
+
                 };
 
                 try
@@ -75,7 +80,10 @@ namespace IKEA.PL.Controllers
                     }
                     else
                     {
-                        throw;
+                        Console.WriteLine($"🔥 CREATE ACTION ERROR: {ex.Message}");
+                        Console.WriteLine(ex.StackTrace);
+                        ModelState.AddModelError("", $"An error occurred: {ex.Message}"); 
+                        return View(Vm);
                     }
 
                 }
@@ -132,7 +140,9 @@ namespace IKEA.PL.Controllers
                 IsActive = Employee.IsActive,
                 HiringDate = Employee.HiringDate,
                 EmployeeType = (EmployeeType)Enum.Parse(typeof(EmployeeType), Employee.EmployeeType),
-               DepartmentId= Employee.DepartmentId
+               DepartmentId= Employee.DepartmentId,
+                ImageName = Employee.ImageName
+
 
 
             };
@@ -158,6 +168,7 @@ namespace IKEA.PL.Controllers
                 EmployeeType = model.EmployeeType,
                 Gender = model.Gender,
                 DepartmentId= model.DepartmentId
+                
             };
 
             try
