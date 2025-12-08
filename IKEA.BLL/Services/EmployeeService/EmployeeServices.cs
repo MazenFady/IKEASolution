@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using IKEA.BLL.Dto_s.DepartmentDto_s;
 using IKEA.BLL.Dto_s.EmployeeDto_s;
+using IKEA.BLL.Services.AttachmentServices;
 using IKEA.DAL.Models.Employees;
 using IKEA.DAL.Reporsatories.EmployeeRepo;
+using IKEA.DAL.UOW;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,21 +16,27 @@ namespace IKEA.BLL.Services.EmployeeServices
 {
     public class EmployeeServices : IEmployeeServices
     {
-        public readonly IEmployeeRepository _employeeRepository;
+        
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly IAttachmentServices attachmentServices;
+        
 
-        public EmployeeServices(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeeServices(IUnitOfWork unitOfWork, IMapper mapper, IAttachmentServices attachmentServices)
         {
-            this._employeeRepository = employeeRepository;
+
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.attachmentServices = attachmentServices;
+            
         }
 
         public IEnumerable<EmployeeDto> GetAllEmployees(bool withTracking = false)
 
 
         {
-            var employees = _employeeRepository.GetAll()
-        .Include(e => e.Department)  // ← هذا السحري!
+            var employees = unitOfWork.EmployeeRepository.GetAll()
+        .Include(e => e.Department)  
         .Where(e => e.IsDeleted != true)
         .ToList();
 
@@ -48,57 +56,111 @@ namespace IKEA.BLL.Services.EmployeeServices
         //    return result.ToList();
 
         //} 
-       // =>
-         //    mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(_employeeRepository.GetAll());
+        // =>
+        //    mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(_employeeRepository.GetAll());
 
+        #region Details
 
+        
         public EmployeeDetailsDto? GetEmployeeById(int Id)
         { 
-        var employee = _employeeRepository.GetById(Id);
+            var employee = unitOfWork.EmployeeRepository.GetById(Id);
             return employee is null ? null : mapper.Map<EmployeeDetailsDto>(employee);
             
         }
+        #endregion
+
+        #region Create
+
+
         public int AddEmployee(CreatedEmployeeDto dto)
         {
-            //var Emp = mapper.Map<CreatedEmployeeDto, Employee>(dto);
-            //Emp.CreatedBy = 1;
-            //Emp.CreatedOn = DateTime.Now;
-            //Emp.LastModifiedBy = 1;
-            //Emp.LastModifiedOn = DateTime.Now;
-            //return _employeeRepository.Add(Emp);
-            var employee = mapper.Map<Employee>(dto);
-            return _employeeRepository.Add(employee);
+           
+
+                var employee = mapper.Map<Employee>(dto);
+
+                if (dto.Image is not null)
+                {
+                    employee.ImageName = attachmentServices.UploadImage(dto.Image, "images");
+                }
+
+                unitOfWork.EmployeeRepository.Add(employee);
+                return unitOfWork.Complete();
+
+            
+
 
         }
+
+        #endregion
+
+        #region Update
+
+
         public int UpdateEmployee(UpdatedEmployeeDto dto)
         {
-            //var Emp = mapper.Map<UpdatedEmployeeDto, Employee>(dto);
-            //Emp.LastModifiedBy = 1;
-            //Emp.LastModifiedOn = DateTime.Now;
-            //return _employeeRepository.Update(Emp);
+            
+
             var employee = mapper.Map<Employee>(dto);
-            return _employeeRepository.Update(employee);
+
+            if (dto.Image is not null)
+            {
+                if (employee.ImageName is not null)
+                {
+                    var filepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", "images", employee.ImageName);
+                    attachmentServices.DeleteImage(filepath);
+
+                }
+                employee.ImageName = attachmentServices.UploadImage(dto.Image, "images");
+
+
+            }
+
+             unitOfWork.EmployeeRepository.Update(employee);
+            return unitOfWork.Complete();
         }
+        #endregion
+
+        #region Delete
+
+        
 
         public bool DeleteEmployee(int id)
         {
-            //var employee = _employeeRepository.GetById(id.Value);
-            //if (employee is null) return false;
-            //else
-            //{
-            //    employee.IsDeleted = true;
-            //    _employeeRepository.Update(employee);
+            
+            var employee = unitOfWork.EmployeeRepository.GetById(id);
 
-            //    return _employeeRepository.SaveChanges() > 0 ? true : false;
-            //}
-            var employee = _employeeRepository.GetById(id);
-            if (employee is null) return false;
-            else 
+            if (employee is not null)
             {
-                employee.IsDeleted = true;
-                return _employeeRepository.Update(employee)> 0 ?  true : false ;
-            }
-        }
+                if (employee.ImageName is not null)
+                { 
+                    var filepath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot","files","images",employee.ImageName);
+                    attachmentServices.DeleteImage(filepath);    
 
+                }
+
+                employee.IsDeleted = true;
+                return unitOfWork.EmployeeRepository.Update(employee) > 0 ? true : false;
+
+            }
+            if (unitOfWork.Complete()>0)
+                return true;
+            else
+                return false;
+
+        }
+        #endregion
+
+        public IEnumerable<EmployeeDto> GetSearchedEmployees(string? searchValue)
+        
+        =>    mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(unitOfWork.EmployeeRepository.GetAll(searchValue).ToList());
+        
     }
 }
+
+//if (employee is null) return false;
+//else
+//{
+//    employee.IsDeleted = true;
+//    return uintOfWork.EmployeeRepository.Update(employee) > 0 ? true : false;
+//}

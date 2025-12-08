@@ -10,12 +10,13 @@
     </div>
     <div class="card-body">
 
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
 
             
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <partial name="PartialViews/CreateEditPartialView" model="@Model" />
+            <input hidden asp-for="ImageName"/> 
+                <partial name="PartialViews/CreateEditPartialView" model="@Model" />
             <div class="mt-4 text-center">
 
                 <input type="submit" value="Update" class="btn btn-success"/>

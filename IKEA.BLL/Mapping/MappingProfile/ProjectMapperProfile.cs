@@ -20,8 +20,8 @@ namespace IKEA.BLL.Mapping.MappingProfile
                 .ForMember(dest => dest.Gender , option => option.MapFrom(src => src.Gender))
                 .ForMember(dest => dest.EmployeeType, option => option.MapFrom(src => src.EmployeeType))
                 .ForMember(dest => dest.HiringDate, option => option.MapFrom(src => DateOnly.FromDateTime(src.HiringDate)))
-                .ForMember(d => d.DepartmentName, options => options.MapFrom(src => src.Department != null ? src.Department.Name : "N/A"))
-                .ReverseMap();
+                .ForMember(d => d.DepartmentName, options => options.MapFrom(src => src.Department != null ? src.Department.Name : "N/A")).
+                ReverseMap();
 
             CreateMap<CreatedEmployeeDto, Employee>()
                 .ForMember(dest => dest.HiringDate, option => option.MapFrom(src => src.HiringDate.ToDateTime(new TimeOnly()))).ReverseMap();

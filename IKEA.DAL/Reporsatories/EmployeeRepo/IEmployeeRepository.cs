@@ -10,6 +10,7 @@ namespace IKEA.DAL.Reporsatories.EmployeeRepo
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-     
+        public IEnumerable<Employee> GetAll(string? searchValue);
+
     }
 }

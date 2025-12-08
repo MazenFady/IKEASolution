@@ -11,7 +11,9 @@ namespace IKEA.BLL.Services.EmployeeServices
     public interface IEmployeeServices
     {
          IEnumerable<EmployeeDto> GetAllEmployees(bool withTracking = false);
-         EmployeeDetailsDto GetEmployeeById(int Id);
+        IEnumerable<EmployeeDto> GetSearchedEmployees (string? searchValue);
+
+        EmployeeDetailsDto GetEmployeeById(int Id);
 
         int AddEmployee(CreatedEmployeeDto dto);
         int UpdateEmployee(UpdatedEmployeeDto dto);
